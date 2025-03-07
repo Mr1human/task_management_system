@@ -1,6 +1,6 @@
 package com.timur.taskmanagement.enums;
 
-public enum UserRole {
+public enum RoleUser {
     ROLE_USER,
     ROLE_ADMIN
 }

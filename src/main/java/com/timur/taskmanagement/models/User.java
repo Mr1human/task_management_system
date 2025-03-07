@@ -1,13 +1,16 @@
 package com.timur.taskmanagement.models;
 
-import com.timur.taskmanagement.enums.UserRole;
+import com.timur.taskmanagement.enums.RoleUser;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,15 +20,18 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<RoleUser> roles;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> createdTasks;
 
-    @OneToMany(mappedBy = "executor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "respUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> assignedTasks;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
+
+
 
 }

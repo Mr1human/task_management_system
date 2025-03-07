@@ -3,12 +3,14 @@ package com.timur.taskmanagement.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.boot.jaxb.internal.stax.LocalSchemaLocator;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter @Setter
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

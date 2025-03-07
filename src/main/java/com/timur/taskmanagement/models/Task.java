@@ -3,12 +3,15 @@ package com.timur.taskmanagement.models;
 import com.timur.taskmanagement.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Task {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,8 +27,8 @@ public class Task {
     private User author;
 
     @ManyToOne
-    @JoinColumn(name = "executor_id")
-    private User executor;
+    @JoinColumn(name = "respUser_id")
+    private User respUser;
 
     private LocalDateTime createdAt;
 
