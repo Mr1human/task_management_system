@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
+@Getter @Setter
+@Table(name = "t_user")
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,4 @@ public class User {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-
-
-
 }

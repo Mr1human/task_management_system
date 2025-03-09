@@ -37,7 +37,7 @@ public class WebSecurityConfig {
                         exceptions.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(authz ->
                         authz
-                                .requestMatchers("/register", "/login").permitAll()
+                                .requestMatchers("/registration", "/login").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
