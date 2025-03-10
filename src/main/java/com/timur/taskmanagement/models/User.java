@@ -1,16 +1,18 @@
 package com.timur.taskmanagement.models;
 
-import com.timur.taskmanagement.enums.RoleUser;
+
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
-@Table(name = "t_user")
+@Table(name = "t_users")
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +21,10 @@ public class User {
     private String email;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<RoleUser> roles;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "t_users_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> createdTasks;

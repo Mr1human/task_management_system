@@ -31,7 +31,10 @@ public class JwtUtils {
         final LocalDateTime now = LocalDateTime.now();
         final Instant instant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(instant);
-        final List<String> roles = user.getRoles().stream().map(RoleUser::name).collect(Collectors.toList());
+        final List<String> roles = user.getRoles()
+                .stream()
+                .map(role -> role.getName().name())
+                .collect(Collectors.toList());
 
         String jwtAccessToken = Jwts.builder().setSubject(user.getEmail())
                 .claim("userId", user.getId().toString())

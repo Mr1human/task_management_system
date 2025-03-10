@@ -1,6 +1,7 @@
 package com.timur.taskmanagement.services;
 
 import com.timur.taskmanagement.enums.RoleUser;
+import com.timur.taskmanagement.models.Role;
 import com.timur.taskmanagement.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,9 +15,9 @@ public class UserDetailsImpl implements UserDetails {
 
     private String email;
     private String password;
-    private Set<RoleUser> roles;
+    private Set<Role> roles;
 
-    public UserDetailsImpl(String email, String password, Set<RoleUser> roles) {
+    public UserDetailsImpl(String email, String password, Set<Role> roles) {
         this.email = email;
         this.password = password;
         this.roles = roles;
@@ -29,7 +30,7 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
     }
 

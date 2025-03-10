@@ -16,6 +16,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -35,12 +37,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 String email = claims.getSubject();
 
                 UserDetails userDetailsImpl = userDetailsService.loadUserByUsername(email);
+
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetailsImpl, null, null);
+                        new UsernamePasswordAuthenticationToken(userDetailsImpl, null, userDetailsImpl.getAuthorities());
 
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
+            System.out.println("Аутентифицированный пользователь: " + SecurityContextHolder.getContext().getAuthentication().getName());
+            System.out.println("Роли в контексте: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         }
         filterChain.doFilter(request, response);
     }

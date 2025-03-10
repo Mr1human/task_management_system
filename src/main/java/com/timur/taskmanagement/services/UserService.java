@@ -1,6 +1,6 @@
 package com.timur.taskmanagement.services;
 
-import com.timur.taskmanagement.dto.RegisterRequestDTO;
+import com.timur.taskmanagement.enums.RoleUser;
 import com.timur.taskmanagement.models.User;
 import com.timur.taskmanagement.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class UserService {
         userRepository.save(user);
     }
     public User findUserByEmail(String email){
-        Optional<User> user = userRepository.findUserByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
         return user.orElseThrow(()-> new RuntimeException("User with this email was not found"));
     }
 
@@ -27,7 +27,9 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
         return user.orElseThrow(()-> new RuntimeException("User with this id was not found"));
     }
-
+        public boolean isAdminExists(){
+            return userRepository.existsByRoles_Name(RoleUser.ROLE_ADMIN);
+        }
     public void delete(User user){
         userRepository.delete(user);
     }

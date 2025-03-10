@@ -37,6 +37,7 @@ public class WebSecurityConfig {
                         exceptions.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(authz ->
                         authz
+                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/registration", "/login").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)

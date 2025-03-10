@@ -2,9 +2,7 @@ package com.timur.taskmanagement.models;
 
 import com.timur.taskmanagement.enums.TaskStatus;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +10,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "t_task")
 public class Task {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
