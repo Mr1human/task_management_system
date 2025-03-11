@@ -29,7 +29,7 @@ public class JwtUtils {
     public String generateAccessToken(User user) {
 
         final LocalDateTime now = LocalDateTime.now();
-        final Instant instant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
+        final Instant instant = now.plusMinutes(25).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(instant);
         final List<String> roles = user.getRoles()
                 .stream()

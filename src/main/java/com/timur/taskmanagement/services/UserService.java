@@ -27,7 +27,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
         return user.orElseThrow(()-> new RuntimeException("User with this id was not found"));
     }
-        public boolean isAdminExists(){
+    public boolean isAdminExists(){
             return userRepository.existsByRoles_Name(RoleUser.ROLE_ADMIN);
         }
     public void delete(User user){

@@ -1,5 +1,6 @@
 package com.timur.taskmanagement.models;
 
+import com.timur.taskmanagement.enums.TaskPriority;
 import com.timur.taskmanagement.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,9 +13,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "t_task")
+@Table(name = "t_tasks")
 public class Task {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String tittle;
@@ -22,6 +24,9 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private TaskPriority priority;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
@@ -37,7 +42,9 @@ public class Task {
     private List<Comment> comments;
 
     @PrePersist
-    public void onCreate(){
-        this.createdAt = LocalDateTime.now();
+    public void onCreate() {
+        if (createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
     }
 }

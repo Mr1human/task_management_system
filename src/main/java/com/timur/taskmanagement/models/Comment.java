@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "t_comment")
+@Table(name = "t_comments")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +30,8 @@ public class Comment {
 
     @PrePersist
     public void onCreate(){
-        this.createdAt = LocalDateTime.now();
+        if (this.createdAt == null){
+            this.createdAt = LocalDateTime.now();
+        }
     }
 }
