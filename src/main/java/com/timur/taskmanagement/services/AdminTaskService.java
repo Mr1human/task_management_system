@@ -5,6 +5,7 @@ import com.timur.taskmanagement.dto.TaskDTO;
 import com.timur.taskmanagement.dto.TaskUpdateAdminDTO;
 import com.timur.taskmanagement.models.Task;
 import com.timur.taskmanagement.models.User;
+import com.timur.taskmanagement.responses.TaskResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class AdminTaskService {
         this.taskService = taskService;
     }
 
-    public TaskDTO createTask(TaskCreateDTO taskCreateDTO){
+    public TaskResponse createTask(TaskCreateDTO taskCreateDTO){
         UserDetails currentUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User author = userService.findUserByEmail(currentUser.getUsername());
 
@@ -34,30 +35,30 @@ public class AdminTaskService {
         task.setAuthor(author);
         task.setRespUser(userService.findUserById(taskCreateDTO.getRespUserId()));
 
-        return taskService.taskToTaskDTO(taskService.save(task));
+        return taskService.taskToTaskResponse(taskService.save(task));
     }
 
-    public TaskDTO updateTask(Long taskId, TaskUpdateAdminDTO taskUpdateAdminDTO){
+    public TaskResponse updateTask(Long taskId, TaskUpdateAdminDTO taskUpdateAdminDTO){
         Task task = taskService.updateTaskForAdmin(taskId, taskUpdateAdminDTO);
-        return taskService.taskToTaskDTO(task);
+        return taskService.taskToTaskResponse(task);
     }
 
-    public List<TaskDTO> getAllTasks(){
+    public List<TaskResponse> getAllTasks(){
         List<Task> tasks = taskService.getAllTasksForAdmin();
-        List<TaskDTO> taskDTOs = new ArrayList<>();
+        List<TaskResponse> taskResponses = new ArrayList<>();
         for (Task task:tasks){
-            TaskDTO taskDTO = taskService.taskToTaskDTO(task);
-            taskDTOs.add(taskDTO);
+            TaskResponse taskResponse = taskService.taskToTaskResponse(task);
+            taskResponses.add(taskResponse);
         }
-        return taskDTOs;
+        return taskResponses;
     }
 
     public void deleteTask(Long id){
         taskService.deleteById(id);
     }
 
-    public TaskDTO getTaskById(Long id){
+    public TaskResponse getTaskById(Long id){
         Task task = taskService.findById(id);
-        return taskService.taskToTaskDTO(task);
+        return taskService.taskToTaskResponse(task);
     }
 }

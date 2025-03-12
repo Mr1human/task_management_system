@@ -1,4 +1,4 @@
-package com.timur.taskmanagement.services;
+package com.timur.taskmanagement.services.impl;
 
 import com.timur.taskmanagement.models.User;
 import com.timur.taskmanagement.repositories.UserRepository;

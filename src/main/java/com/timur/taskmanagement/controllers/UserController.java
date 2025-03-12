@@ -2,6 +2,7 @@ package com.timur.taskmanagement.controllers;
 
 import com.timur.taskmanagement.dto.TaskDTO;
 import com.timur.taskmanagement.dto.TaskUpdateUserDTO;
+import com.timur.taskmanagement.responses.TaskResponse;
 import com.timur.taskmanagement.services.TaskService;
 import com.timur.taskmanagement.services.UserTaskService;
 import org.springframework.data.domain.Page;
@@ -18,19 +19,11 @@ public class UserController {
         this.userTaskService = userTaskService;
     }
 
-    @GetMapping("/task/{task_id}")
-    public ResponseEntity<?> getTask(@PathVariable Long task_id,
-                                     @RequestHeader("Authorization") String authorizationHeader) throws AccessDeniedException {
-        TaskDTO taskDTO = userTaskService.getTaskById(task_id, authorizationHeader);
-        return ResponseEntity.ok(taskDTO);
-    }
-
     @PatchMapping("/update/{task_id}")
-    public ResponseEntity<?> updateTask(@PathVariable Long task_id,
-                                        @RequestBody TaskUpdateUserDTO taskUpdateUserDTO,
-                                        @RequestHeader("Authorization") String authorizationHeader) throws AccessDeniedException {
-       TaskDTO taskDTO = userTaskService
-               .updateTask(task_id, taskUpdateUserDTO, authorizationHeader);
-       return ResponseEntity.ok(taskDTO);
+    public ResponseEntity<TaskResponse> updateTask(@PathVariable Long task_id,
+                                        @RequestBody TaskUpdateUserDTO taskUpdateUserDTO) throws AccessDeniedException {
+       TaskResponse taskResponse = userTaskService
+               .updateTask(task_id, taskUpdateUserDTO);
+       return ResponseEntity.ok(taskResponse);
     }
 }

@@ -6,6 +6,7 @@ import com.timur.taskmanagement.dto.TaskUpdateUserDTO;
 import com.timur.taskmanagement.models.Task;
 import com.timur.taskmanagement.models.User;
 import com.timur.taskmanagement.repositories.TaskRepository;
+import com.timur.taskmanagement.responses.TaskResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -98,17 +99,17 @@ public class TaskService {
         return currentUser.getId().equals(userTaskId) || userService.isAdmin(currentUser);
     }
 
-    public TaskDTO taskToTaskDTO(Task task){
-        TaskDTO taskDTO = new TaskDTO();
+    public TaskResponse taskToTaskResponse(Task task){
+        TaskResponse taskResponse = new TaskResponse();
 
-        taskDTO.setId(task.getId());
-        taskDTO.setTitle(task.getTittle());
-        taskDTO.setDescription(task.getDescription());
-        taskDTO.setStatus(task.getStatus());
-        taskDTO.setPriority(task.getPriority());
-        taskDTO.setAuthorId(task.getAuthor().getId());
-        taskDTO.setRespUserId(task.getRespUser().getId());
+        taskResponse.setId(task.getId());
+        taskResponse.setTitle(task.getTittle());
+        taskResponse.setDescription(task.getDescription());
+        taskResponse.setStatus(task.getStatus());
+        taskResponse.setPriority(task.getPriority());
+        taskResponse.setAuthorId(task.getAuthor().getId());
+        taskResponse.setRespUserId(task.getRespUser().getId());
 
-        return taskDTO;
+        return taskResponse;
     }
 }

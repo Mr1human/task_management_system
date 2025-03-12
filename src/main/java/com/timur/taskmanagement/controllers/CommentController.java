@@ -17,8 +17,8 @@ public class CommentController {
         this.commentTaskService = commentTaskService;
     }
 
-    @PostMapping("/createcomment")
-    public ResponseEntity<?> createComment(@RequestBody CommentDTO commentDTO,
+    @PostMapping("/create-comment")
+    public ResponseEntity<CommentResponse> createComment(@RequestBody CommentDTO commentDTO,
                                         @RequestHeader("Authorization") String authorizationHeader) throws AccessDeniedException {
 
         CommentResponse commentResponse = commentTaskService.createComment(commentDTO, authorizationHeader);
@@ -26,7 +26,7 @@ public class CommentController {
     }
 
     @GetMapping("/comments/{task_id}")
-    public ResponseEntity<?> getComments(@PathVariable Long task_id,
+    public ResponseEntity<List<CommentResponse>> getComments(@PathVariable Long task_id,
                                          @RequestHeader("Authorization") String authorizationHeader) throws AccessDeniedException {
         List<CommentResponse> commentDTOS =
                 commentTaskService.getCommentsTaskByTaskId(task_id, authorizationHeader);

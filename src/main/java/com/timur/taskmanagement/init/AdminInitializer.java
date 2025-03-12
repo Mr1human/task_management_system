@@ -1,9 +1,10 @@
-package com.timur.taskmanagement.services;
+package com.timur.taskmanagement.init;
 
 import com.timur.taskmanagement.enums.RoleUser;
 import com.timur.taskmanagement.models.Role;
 import com.timur.taskmanagement.models.User;
-import com.timur.taskmanagement.repositories.RoleRepository;
+import com.timur.taskmanagement.services.RoleService;
+import com.timur.taskmanagement.services.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -7,11 +7,10 @@ import com.timur.taskmanagement.exceptions.EmailAlreadyTakenException;
 import com.timur.taskmanagement.exceptions.InvalidCredentialsException;
 import com.timur.taskmanagement.jwt.JwtUtils;
 import com.timur.taskmanagement.models.Role;
-import com.timur.taskmanagement.models.Task;
 import com.timur.taskmanagement.models.User;
 import com.timur.taskmanagement.responses.JwtResponse;
 import com.timur.taskmanagement.responses.UserRegisterResponse;
-import io.jsonwebtoken.Claims;
+import com.timur.taskmanagement.services.impl.UserDetailsImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -89,10 +87,10 @@ public class AuthService {
         }
     }
 
-    public User getCurrentUserFromToken(String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        Claims claims = jwtUtils.getClaimsFromJwtAccessToken(token);
-        Long userId = Long.parseLong(claims.get("userId", String.class));
-        return userService.findUserById(userId);
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetailsImpl)authentication.getPrincipal();
+        User currentUser = userService.findUserByEmail(userDetails.getUsername());
+        return currentUser;
     }
 }

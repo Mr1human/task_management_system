@@ -1,11 +1,11 @@
 package com.timur.taskmanagement.controllers;
 
 import com.timur.taskmanagement.dto.TaskCreateDTO;
-import com.timur.taskmanagement.dto.TaskDTO;
 import com.timur.taskmanagement.dto.TaskUpdateAdminDTO;
+import com.timur.taskmanagement.responses.MessageResponse;
+import com.timur.taskmanagement.responses.TaskResponse;
 import com.timur.taskmanagement.services.AdminTaskService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,34 +27,37 @@ public class AdminController {
         return ResponseEntity.ok("OK!");
     }
 
+
     @PostMapping("/create-task")
-    public ResponseEntity<?> createTask(@Valid @RequestBody TaskCreateDTO taskCreateDTO){
-        TaskDTO taskDTO = adminTaskService.createTask(taskCreateDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(taskDTO);
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskCreateDTO taskCreateDTO){
+        TaskResponse taskResponse = adminTaskService.createTask(taskCreateDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskResponse);
     }
 
-    @GetMapping("/task/{task_id}")
-    public ResponseEntity<?> getTask(@PathVariable Long task_id){
-        TaskDTO taskDTO = adminTaskService.getTaskById(task_id);
-        return ResponseEntity.ok(taskDTO);
+    @GetMapping("/tasks/{task_id}")
+    public ResponseEntity<TaskResponse> getTask(@PathVariable Long task_id){
+        TaskResponse taskResponse = adminTaskService.getTaskById(task_id);
+        return ResponseEntity.ok(taskResponse);
     }
 
     @GetMapping("/tasks")
-    public ResponseEntity<?> getTasks(){
-        List<TaskDTO> tasks = adminTaskService.getAllTasks();
+    public ResponseEntity<List<TaskResponse>> getTasks(){
+        List<TaskResponse> tasks = adminTaskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
 
     @DeleteMapping("/delete/{task_id}")
-    public ResponseEntity<?> deleteTask(@PathVariable Long task_id){
+    public ResponseEntity<MessageResponse> deleteTask(@PathVariable Long task_id){
         adminTaskService.deleteTask(task_id);
-        return ResponseEntity.ok("task has been deleted!");
+        MessageResponse messageResponse = new MessageResponse();
+        messageResponse.setText("task has been deleted!");
+        return ResponseEntity.ok(messageResponse);
     }
 
     @PatchMapping("/update/{task_id}")
-    public ResponseEntity<?> updateTask(@PathVariable Long task_id,
+    public ResponseEntity<TaskResponse> updateTask(@PathVariable Long task_id,
                                         @Valid @RequestBody TaskUpdateAdminDTO taskUpdateAdminDTO){
-        TaskDTO taskDTO = adminTaskService.updateTask(task_id, taskUpdateAdminDTO);
-        return ResponseEntity.ok(taskDTO);
+        TaskResponse taskResponse = adminTaskService.updateTask(task_id, taskUpdateAdminDTO);
+        return ResponseEntity.ok(taskResponse);
     }
 }

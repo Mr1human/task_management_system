@@ -1,4 +1,4 @@
-package com.timur.taskmanagement.services;
+package com.timur.taskmanagement.init;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

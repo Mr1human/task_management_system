@@ -1,7 +1,7 @@
 package com.timur.taskmanagement.config.security;
 
 import com.timur.taskmanagement.jwt.JwtUtils;
-import com.timur.taskmanagement.services.UserDetailsServiceImpl;
+import com.timur.taskmanagement.services.impl.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,8 +16,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
 
 
 public class AuthTokenFilter extends OncePerRequestFilter {

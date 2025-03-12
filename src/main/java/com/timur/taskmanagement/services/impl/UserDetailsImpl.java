@@ -1,6 +1,5 @@
-package com.timur.taskmanagement.services;
+package com.timur.taskmanagement.services.impl;
 
-import com.timur.taskmanagement.enums.RoleUser;
 import com.timur.taskmanagement.models.Role;
 import com.timur.taskmanagement.models.User;
 import org.springframework.security.core.GrantedAuthority;

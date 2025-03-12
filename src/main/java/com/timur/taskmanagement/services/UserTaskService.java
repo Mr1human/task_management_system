@@ -5,6 +5,7 @@ import com.timur.taskmanagement.dto.TaskUpdateUserDTO;
 import com.timur.taskmanagement.exceptions.NoAccessException;
 import com.timur.taskmanagement.models.Task;
 import com.timur.taskmanagement.models.User;
+import com.timur.taskmanagement.responses.TaskResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -22,30 +23,30 @@ public class UserTaskService {
         this.userService = userService;
     }
 
-    public TaskDTO getTaskById(Long taskId, String authorizationHeader) throws AccessDeniedException {
+    public TaskResponse getTaskById(Long taskId) throws AccessDeniedException {
         Task task = taskService.findById(taskId);
-        User currentUser = authService.getCurrentUserFromToken(authorizationHeader);
+        User currentUser = authService.getCurrentUser();
 
         if(!taskService.validateAccessUserToTask(task.getId(), currentUser)){
             throw new AccessDeniedException("No access!");
         }
 
-        return taskService.taskToTaskDTO(task);
+        return taskService.taskToTaskResponse(task);
     }
 
-    public Page<TaskDTO> getFiltrationTasks(Long authorId, Long respUserId, int page, int size, String authorizationHeader) {
+    public Page<TaskResponse> getFiltrationTasks(Long authorId, Long respUserId, int page, int size) {
         if (authorId == null && respUserId == null) {
             throw new IllegalArgumentException("Either authorId or respUserId must be provided");
         } else if (authorId != null) {
-            return getTasksByAuthor(authorId, page, size, authorizationHeader);
+            return getTasksByAuthor(authorId, page, size);
         } else {
-            return getTasksByRespUserID(respUserId, page, size, authorizationHeader);
+            return getTasksByRespUserID(respUserId, page, size);
         }
     }
 
-    public TaskDTO updateTask(Long taskId, TaskUpdateUserDTO taskUpdateUserDTO, String authorizationHeader) throws AccessDeniedException {
+    public TaskResponse updateTask(Long taskId, TaskUpdateUserDTO taskUpdateUserDTO) throws AccessDeniedException {
         Task task = taskService.findById(taskId);
-        User currentUser = authService.getCurrentUserFromToken(authorizationHeader);
+        User currentUser = authService.getCurrentUser();
 
         if(!taskService.validateAccessUserToTask(task.getId(), currentUser)){
             throw new NoAccessException("No access!");
@@ -55,25 +56,25 @@ public class UserTaskService {
             task.setStatus(taskUpdateUserDTO.getStatus());
         }
 
-        return taskService.taskToTaskDTO(taskService.save(task));
+        return taskService.taskToTaskResponse(taskService.save(task));
     }
 
-    private Page<TaskDTO> getTasksByAuthor(Long authorId, int page, int size, String authorization){
-        User currentUser = authService.getCurrentUserFromToken(authorization);
+    private Page<TaskResponse> getTasksByAuthor(Long authorId, int page, int size){
+        User currentUser = authService.getCurrentUser();
 
         if (currentUser.getId().equals(authorId) || userService.isAdmin(currentUser)){
             Page<Task> taskPage = taskService.getTasksByAuthor(authorId, page, size);
-            return taskPage.map(task -> taskService.taskToTaskDTO(task));
+            return taskPage.map(task -> taskService.taskToTaskResponse(task));
         }
         throw new NoAccessException("No Access");
     }
 
-    private Page<TaskDTO> getTasksByRespUserID(Long respUserId, int page, int size, String authorization){
-        User currentUser = authService.getCurrentUserFromToken(authorization);
+    private Page<TaskResponse> getTasksByRespUserID(Long respUserId, int page, int size){
+        User currentUser = authService.getCurrentUser();
 
         if (currentUser.getId().equals(respUserId) || userService.isAdmin(currentUser)){
             Page<Task> taskPage = taskService.getTasksByRespUser(respUserId, page, size);
-            return taskPage.map(task -> taskService.taskToTaskDTO(task));
+            return taskPage.map(task -> taskService.taskToTaskResponse(task));
         }
         throw new NoAccessException("No Access");
     }
