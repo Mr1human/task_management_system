@@ -6,6 +6,11 @@ import com.timur.taskmanagement.dto.TaskUpdateUserDTO;
 import com.timur.taskmanagement.models.Task;
 import com.timur.taskmanagement.models.User;
 import com.timur.taskmanagement.repositories.TaskRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,19 +36,29 @@ public class TaskService {
     public Task findById(Long id){
         return taskRepository
                 .findById(id)
-                .orElseThrow(()-> new RuntimeException("Task with id was not found!"));
+                .orElseThrow(()-> new EntityNotFoundException("Task with id was not found!"));
     }
 
     public List<Task> getAllTasksForAdmin(){
         return taskRepository.findAll();
     }
 
+    public Page<Task> getTasksByAuthor(Long authorId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return taskRepository.findByAuthor_Id(authorId, pageable);
+    }
+
+    public Page<Task> getTasksByRespUser(Long respUserId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return taskRepository.findByRespUser_Id(respUserId, pageable);
+    }
+
     public Task updateTaskForAdmin(Long taskId, TaskUpdateAdminDTO taskUpdateAdminDTO){
         Task task = taskRepository
                 .findById(taskId)
-                .orElseThrow(()-> new RuntimeException("Task with this ID was not found"));
-        if(taskUpdateAdminDTO.getTittle()!=null){
-            task.setTittle(taskUpdateAdminDTO.getTittle());
+                .orElseThrow(()-> new EntityNotFoundException("Task with this ID was not found"));
+        if(taskUpdateAdminDTO.getTitle()!=null){
+            task.setTittle(taskUpdateAdminDTO.getTitle());
         }
         if(taskUpdateAdminDTO.getDescription()!=null){
             task.setDescription(taskUpdateAdminDTO.getDescription());
@@ -64,18 +79,30 @@ public class TaskService {
     public Task updateTaskForUser(Long taskId, TaskUpdateUserDTO taskUpdateUserDTO){
         Task task = taskRepository
                 .findById(taskId)
-                .orElseThrow(()-> new RuntimeException("Task with this ID was not found"));
+                .orElseThrow(()-> new EntityNotFoundException("Task with this ID was not found"));
         if(taskUpdateUserDTO.getStatus()!=null){
             task.setStatus(taskUpdateUserDTO.getStatus());
         }
         return taskRepository.save(task);
     }
 
+    public boolean validateAccessUserToTask(Long taskId, User currentUser) {
+        Task task = findById(taskId);
+        Long userTaskId = task.getRespUser().getId();
+        if (task == null || task.getRespUser() == null) {
+            throw new EntityNotFoundException("Task or responsible user not found");
+        }
+        System.out.println("Current user ID: " + currentUser.getId());
+        System.out.println("Task responsible user ID: " + userTaskId);
+        System.out.println("Is admin: " + userService.isAdmin(currentUser));
+        return currentUser.getId().equals(userTaskId) || userService.isAdmin(currentUser);
+    }
+
     public TaskDTO taskToTaskDTO(Task task){
         TaskDTO taskDTO = new TaskDTO();
 
         taskDTO.setId(task.getId());
-        taskDTO.setTittle(task.getTittle());
+        taskDTO.setTitle(task.getTittle());
         taskDTO.setDescription(task.getDescription());
         taskDTO.setStatus(task.getStatus());
         taskDTO.setPriority(task.getPriority());

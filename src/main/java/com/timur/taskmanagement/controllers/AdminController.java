@@ -4,6 +4,8 @@ import com.timur.taskmanagement.dto.TaskCreateDTO;
 import com.timur.taskmanagement.dto.TaskDTO;
 import com.timur.taskmanagement.dto.TaskUpdateAdminDTO;
 import com.timur.taskmanagement.services.AdminTaskService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +27,8 @@ public class AdminController {
         return ResponseEntity.ok("OK!");
     }
 
-    @PostMapping("/createtask")
-    public ResponseEntity<?> createTask(@RequestBody TaskCreateDTO taskCreateDTO){
+    @PostMapping("/create-task")
+    public ResponseEntity<?> createTask(@Valid @RequestBody TaskCreateDTO taskCreateDTO){
         TaskDTO taskDTO = adminTaskService.createTask(taskCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(taskDTO);
     }
@@ -51,7 +53,7 @@ public class AdminController {
 
     @PatchMapping("/update/{task_id}")
     public ResponseEntity<?> updateTask(@PathVariable Long task_id,
-                                        @RequestBody TaskUpdateAdminDTO taskUpdateAdminDTO){
+                                        @Valid @RequestBody TaskUpdateAdminDTO taskUpdateAdminDTO){
         TaskDTO taskDTO = adminTaskService.updateTask(task_id, taskUpdateAdminDTO);
         return ResponseEntity.ok(taskDTO);
     }

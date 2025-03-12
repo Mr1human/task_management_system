@@ -27,7 +27,7 @@ public class AdminTaskService {
         User author = userService.findUserByEmail(currentUser.getUsername());
 
         Task task = new Task();
-        task.setTittle(taskCreateDTO.getTittle());
+        task.setTittle(taskCreateDTO.getTitle());
         task.setDescription(taskCreateDTO.getDescription());
         task.setStatus(taskCreateDTO.getStatus());
         task.setPriority(taskCreateDTO.getPriority());

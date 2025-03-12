@@ -5,6 +5,7 @@ import com.timur.taskmanagement.dto.RegisterRequestDTO;
 import com.timur.taskmanagement.responses.JwtResponse;
 import com.timur.taskmanagement.responses.UserRegisterResponse;
 import com.timur.taskmanagement.services.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,20 +23,16 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@RequestBody RegisterRequestDTO registerRequest){
-       UserRegisterResponse userRegisterResponse = authService.register(registerRequest);
-       return ResponseEntity.ok(userRegisterResponse);
+    public ResponseEntity<?> registration(@Valid @RequestBody RegisterRequestDTO registerRequest) {
+        UserRegisterResponse userRegisterResponse = authService.register(registerRequest);
+        return ResponseEntity.ok(userRegisterResponse);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO){
-        try {
-            JwtResponse jwtResponse = authService.login(loginRequestDTO);
-            return ResponseEntity.ok(jwtResponse);
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
-        }
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
+
+        JwtResponse jwtResponse = authService.login(loginRequestDTO);
+        return ResponseEntity.ok(jwtResponse);
+
     }
 }
