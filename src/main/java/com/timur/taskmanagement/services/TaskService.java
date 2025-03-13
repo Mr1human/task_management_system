@@ -93,9 +93,6 @@ public class TaskService {
         if (task == null || task.getRespUser() == null) {
             throw new EntityNotFoundException("Task or responsible user not found");
         }
-        System.out.println("Current user ID: " + currentUser.getId());
-        System.out.println("Task responsible user ID: " + userTaskId);
-        System.out.println("Is admin: " + userService.isAdmin(currentUser));
         return currentUser.getId().equals(userTaskId) || userService.isAdmin(currentUser);
     }
 

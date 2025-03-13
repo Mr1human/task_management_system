@@ -41,7 +41,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/registration", "/login",
                                         "/swagger-ui/index.html", "/swagger-ui/**",
                                         "/swagger-ui.html", "/v3/api-docs/**",
-                                        "/swagger-resources/**", "/webjars/**").permitAll()
+                                        "/swagger-resources/**", "/webjars/**", "/healthcheck").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout

@@ -8,11 +8,32 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_HOST_AUTH_METHOD: md5
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: taskmanagement
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U root -d taskmanagement"]
+      test: [ "CMD-SHELL", "pg_isready -U root -d taskmanagement" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  taskmanagement:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_URL: ${POSTGRES_URL}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: curl http://taskmanagement:8080/healthcheck
       interval: 15s
       timeout: 5s
       retries: 3

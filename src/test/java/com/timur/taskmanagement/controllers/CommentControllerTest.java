@@ -74,9 +74,12 @@ public class CommentControllerTest {
     }
 
     private String authenticateUser() throws Exception {
+        String email = "testuser" + System.currentTimeMillis() + "@mail.com";
+        String password = "123";
+
         RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO();
-        registerRequestDTO.setEmail("usertest@mail.com");
-        registerRequestDTO.setPassword("123");
+        registerRequestDTO.setEmail(email);
+        registerRequestDTO.setPassword(password);
 
         mockMvc.perform(post("/registration")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -84,8 +87,8 @@ public class CommentControllerTest {
                 .andExpect(status().isCreated());
 
         LoginRequestDTO userLoginRequestDTO = new LoginRequestDTO();
-        userLoginRequestDTO.setEmail("usertest@mail.com");
-        userLoginRequestDTO.setPassword("123");
+        userLoginRequestDTO.setEmail(email);
+        userLoginRequestDTO.setPassword(password);
 
         String responseUser = mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
