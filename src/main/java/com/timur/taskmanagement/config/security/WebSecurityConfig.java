@@ -19,7 +19,7 @@ public class WebSecurityConfig {
 
     private final AuthEntryPointJwt unauthorizedHandler;
 
-    public WebSecurityConfig(AuthEntryPointJwt unauthorizedHandler){
+    public WebSecurityConfig(AuthEntryPointJwt unauthorizedHandler) {
         this.unauthorizedHandler = unauthorizedHandler;
     }
 
@@ -38,7 +38,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authz ->
                         authz
                                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/registration", "/login").permitAll()
+                                .requestMatchers("/registration", "/login",
+                                        "/swagger-ui/index.html", "/swagger-ui/**",
+                                        "/swagger-ui.html", "/v3/api-docs/**",
+                                        "/swagger-resources/**", "/webjars/**").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout

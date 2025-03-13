@@ -10,9 +10,11 @@ public class JwtResponse {
 
     private final String type = "JWT";
     private String email;
+    private Long userId;
 
-    public JwtResponse(String jwtAccesstoken, String email) {
+    public JwtResponse(String jwtAccesstoken, String email, Long userId) {
         this.jwtAccessToken = jwtAccesstoken;
         this.email = email;
+        this.userId = userId;
     }
 }

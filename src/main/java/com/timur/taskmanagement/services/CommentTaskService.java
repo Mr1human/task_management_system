@@ -21,17 +21,17 @@ public class CommentTaskService {
     private final CommentService commentService;
     private final TaskService taskService;
     private final UserService userService;
-    private final JwtUtils jwtUtils;
+    private final AuthService authService;
 
-    public CommentTaskService(CommentService commentService, TaskService taskService, UserService userService, JwtUtils jwtUtils) {
+    public CommentTaskService(CommentService commentService, TaskService taskService, UserService userService, AuthService authService) {
         this.commentService = commentService;
         this.taskService = taskService;
         this.userService = userService;
-        this.jwtUtils = jwtUtils;
+        this.authService = authService;
     }
 
-    public List<CommentResponse> getCommentsTaskByTaskId(Long taskId, String authorizationHeader) throws AccessDeniedException {
-        User currentUser = getCurrentUserFromToken(authorizationHeader);
+    public List<CommentResponse> getCommentsTaskByTaskId(Long taskId) throws AccessDeniedException {
+        User currentUser = authService.getCurrentUser();
         if (validateAccessUserToComments(taskId, currentUser)) {
             List<Comment> comments = commentService.getAllCommentsByTaskId(taskId);
             return comments.stream()
@@ -48,8 +48,8 @@ public class CommentTaskService {
         }
     }
 
-    public CommentResponse createComment(CommentDTO commentDTO, String authorizationHeader) throws AccessDeniedException {
-        User currentUser = getCurrentUserFromToken(authorizationHeader);
+    public CommentResponse createComment(CommentDTO commentDTO) throws AccessDeniedException {
+        User currentUser = authService.getCurrentUser();
 
         if (validateAccessUserToComments(commentDTO.getTaskId(), currentUser)) {
             Comment comment = new Comment();
@@ -78,16 +78,6 @@ public class CommentTaskService {
         if (task == null || task.getRespUser() == null) {
             throw new EntityNotFoundException("Task or responsible user not found");
         }
-        System.out.println("Current user ID: " + currentUser.getId());
-        System.out.println("Task responsible user ID: " + userTaskId);
-        System.out.println("Is admin: " + userService.isAdmin(currentUser));
         return currentUser.getId().equals(userTaskId) || userService.isAdmin(currentUser);
-    }
-
-    private User getCurrentUserFromToken(String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        Claims claims = jwtUtils.getClaimsFromJwtAccessToken(token);
-        Long userId = Long.parseLong(claims.get("userId", String.class));
-        return userService.findUserById(userId);
     }
 }

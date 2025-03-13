@@ -12,7 +12,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class TaskCreateDTO {
-    @NotBlank(message = "Title must not be empty")
+    @NotNull(message = "Title must not be empty")
     @Size(max = 255, message = "Title must not exceed 255 characters")
     private String title;
 

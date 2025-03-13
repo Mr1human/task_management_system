@@ -59,7 +59,7 @@ public class UserTaskService {
         return taskService.taskToTaskResponse(taskService.save(task));
     }
 
-    private Page<TaskResponse> getTasksByAuthor(Long authorId, int page, int size){
+    public Page<TaskResponse> getTasksByAuthor(Long authorId, int page, int size){
         User currentUser = authService.getCurrentUser();
 
         if (currentUser.getId().equals(authorId) || userService.isAdmin(currentUser)){
@@ -69,7 +69,7 @@ public class UserTaskService {
         throw new NoAccessException("No Access");
     }
 
-    private Page<TaskResponse> getTasksByRespUserID(Long respUserId, int page, int size){
+    public Page<TaskResponse> getTasksByRespUserID(Long respUserId, int page, int size){
         User currentUser = authService.getCurrentUser();
 
         if (currentUser.getId().equals(respUserId) || userService.isAdmin(currentUser)){
@@ -78,4 +78,6 @@ public class UserTaskService {
         }
         throw new NoAccessException("No Access");
     }
+
+
 }
